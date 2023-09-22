@@ -43,6 +43,9 @@ Router 4
 conf t 
 hostname R4
 no ip domain lookup
+router eigrp 230
+network 192.168.3.0 255.255.255.0
+no auto-summary
 int f0/1
 no switchport
 ip add 10.9.4.1 255.255.255.252
@@ -191,6 +194,8 @@ no ip domain lookup
 router isis 100
 is-type level-2-only
 net 00.0000.0000.0009.00
+exit
+router eigrp 
 int f0/1
 no switchport
 ip add 10.9.4.2 255.255.255.252
@@ -235,13 +240,14 @@ no shut
 end
 !
 
-
-
 --------------------------------
 Router 11
 conf t
 hostname R11
 no ip domain lookup
+router eigrp 130
+network 192.168.3.0 255.255.255.0
+no auto-summary
 int f1/2
 no switchport
 ip add 10.9.11.1 255.255.255.252
