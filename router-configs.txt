@@ -65,13 +65,25 @@ router isis 100
 is-type level-2-only
 net 00.0000.0000.0005.00
 exit
+ip vrf cust-a
+rd 65500:100
+route-target export 65500:100
+route-target import 65500:100
+exit
+ip vrf cust-b
+rd 64500:200
+route-target export 64500:200
+route-target import 64500:200
+exit
 int f1/1
 no switchport
 ip add 10.5.10.1 255.255.255.252
+ip vrf forwarding cust-b
 no shut
 int f1/0
 no switchport
 ip add 10.5.1.1 255.255.255.252
+ip vrf forwarding cust-a
 no shut
 int lo 1
 ip add 5.5.5.5 255.255.255.255
@@ -134,6 +146,11 @@ router isis 100
 is-type level-2-only
 net 00.0000.0000.0007.00
 exit
+ip vrf cust-a
+rd 65500:100
+route-target export 65500:100
+route-target import 65500:100
+exit
 int f0/1
 no switchport
 ip add 10.6.7.1 255.255.255.252
@@ -147,6 +164,7 @@ no shut
 int f1/0
 no switchport
 ip add 10.7.3.2 255.255.255.252
+ip vrf forwarding cust-a
 int lo 1
 ip add 7.7.7.7 255.255.255.255
 ip router isis 100
@@ -161,9 +179,16 @@ no ip domain lookup
 router isis 100
 is-type level-2-only
 net 00.0000.0000.0008.00
+exit
+ip vrf cust-b
+rd 64500:200
+route-target export 64500:200
+route-target import 64500:200
+exit
 int f0/0
 no switchport
 ip add 10.8.2.2 255.255.255.252
+ip vrf forwarding cust-b
 no shut
 int f0/1
 no switchport
@@ -195,14 +220,25 @@ router isis 100
 is-type level-2-only
 net 00.0000.0000.0009.00
 exit
-router eigrp 
+ip vrf cust-a
+rd 65500:100
+route-target export 65500:100
+route-target import 65500:100
+exit
+ip vrf cust-b
+rd 64500:200
+route-target export 64500:200
+route-target import 64500:200
+exit
 int f0/1
 no switchport
 ip add 10.9.4.2 255.255.255.252
+ip vrf forwarding cust-b
 no shut
 int f1/2
 no switchport
 ip add 10.9.11.2 255.255.255.252
+ip vrf forwarding cust-a
 no shut
 int f0/0
 no switchport
@@ -223,6 +259,7 @@ int lo 1
 ip add 9.9.9.9 255.255.255.252
 ip router isis 100
 no shut
+
 end
 
 Customer--------------------------------
