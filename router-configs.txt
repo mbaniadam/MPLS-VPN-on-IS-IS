@@ -6,9 +6,18 @@ int f1/0
 no switchport
 ip add 10.5.1.2 255.255.255.252
 no shut
+int lo 0
+ip add 1.1.1.1 255.255.255.255
 int lo 1
 ip add 192.168.1.1 255.255.255.0
 no shut
+exit
+ip route 5.5.5.5 255.255.255.255 10.5.1.1
+router bgp 65500
+bgp router-id 1.1.1.1
+neighbor 5.5.5.5 remote-as 64100
+neighbor 5.5.5.5 update-source loopback 1
+neighbor 5.5.5.5 ebgp-multihop 2
 end
 
 --------------------------------
@@ -77,13 +86,13 @@ route-target import 64500:200
 exit
 int f1/1
 no switchport
-ip add 10.5.10.1 255.255.255.252
 ip vrf forwarding cust-b
+ip add 10.5.10.1 255.255.255.252
 no shut
 int f1/0
 no switchport
-ip add 10.5.1.1 255.255.255.252
 ip vrf forwarding cust-a
+ip add 10.5.1.1 255.255.255.252
 no shut
 int lo 1
 ip add 5.5.5.5 255.255.255.255
@@ -99,6 +108,24 @@ no switchport
 ip add 10.5.6.1 255.255.255.252
 ip router isis 100
 no shut
+exit
+ip route vrf cust-a 1.1.1.1 255.255.255.255 10.5.1.2
+ip route vrf cust-b 10.10.10.10 255.255.255.255 10.5.10.2
+router bgp 64100
+neighbor 1.1.1.1 remote-as 65500 
+neighbor 1.1.1.1 update-source loopback 1
+address-family vpnv4
+neighbor 1.1.1.1 activate
+neighbor 1.1.1.1 next-hop-self
+neighbor 1.1.1.1 send-community extended
+exit-address-family
+neighbor 10.10.10.10 remote-as 64500 
+neighbor 10.10.10.10 update-source loopback 1
+address-family vpnv4
+neighbor 10.10.10.10 activate
+neighbor 10.10.10.10 next-hop-self
+neighbor 10.10.10.10 send-community extended
+exit-address-family
 end
 
 ISP--------------------------------
@@ -135,6 +162,17 @@ int lo 1
 ip add 6.6.6.6 255.255.255.255
 ip router isis 100
 no shut
+exit
+ip route 10.10.10.10 255.255.255.255 10.5.1.2
+ip route 1.1.1.1 255.255.255.255 10.5.10.2
+router bgp 64100
+bgp router-id 5.5.5.5
+neighbor 10.10.10.10 remote-as 64500
+neighbor 10.10.10.10 update-source loopback 1
+neighbor 10.10.10.10 ebgp-multihop 2
+neighbor 1.1.1.1 remote-as 65500
+neighbor 1.1.1.1 update-source loopback 1
+neighbor 1.1.1.1 ebgp-multihop 2
 end
 
 ISP--------------------------------
@@ -163,8 +201,8 @@ ip router isis 100
 no shut
 int f1/0
 no switchport
-ip add 10.7.3.2 255.255.255.252
 ip vrf forwarding cust-a
+ip add 10.7.3.2 255.255.255.252
 int lo 1
 ip add 7.7.7.7 255.255.255.255
 ip router isis 100
@@ -187,8 +225,8 @@ route-target import 64500:200
 exit
 int f0/0
 no switchport
-ip add 10.8.2.2 255.255.255.252
 ip vrf forwarding cust-b
+ip add 10.8.2.2 255.255.255.252
 no shut
 int f0/1
 no switchport
@@ -209,6 +247,7 @@ int lo 1
 ip add 8.8.8.8 255.255.255.255
 ip router isis 100
 no shut
+exit
 end
 
 ISP--------------------------------
@@ -232,13 +271,13 @@ route-target import 64500:200
 exit
 int f0/1
 no switchport
-ip add 10.9.4.2 255.255.255.252
 ip vrf forwarding cust-b
+ip add 10.9.4.2 255.255.255.252
 no shut
 int f1/2
 no switchport
-ip add 10.9.11.2 255.255.255.252
 ip vrf forwarding cust-a
+ip add 10.9.11.2 255.255.255.252
 no shut
 int f0/0
 no switchport
@@ -271,9 +310,17 @@ int f1/1
 no switchport
 ip add 10.5.10.2 255.255.255.252
 no shut
+int lo 0
+ip add 10.10.10.10 255.255.255.255
 int lo 1
 ip add 192.168.1.1 255.255.255.0
 no shut
+exit
+router bgp 64500
+neighbor 5.5.5.5 remote-as 64100
+bgp router-id 10.10.10.10
+neighbor 5.5.5.5 update-source loopback 0
+neighbor 5.5.5.5 ebgp-multihop 2
 end
 !
 
