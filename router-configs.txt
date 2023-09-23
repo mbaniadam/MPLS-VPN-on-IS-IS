@@ -343,6 +343,14 @@ int lo 1
 ip add 9.9.9.9 255.255.255.252
 ip router isis 100
 no shut
+router eigrp 910
+address-family ipv4 vrf cust-a 
+autonomous-system 65500
+no auto-summary
+network 10.9.11.0 0.0.0.3
+redistribute bgp 64100 metric 1000 100 255 1 1500 
+exit
+
 
 end
 
@@ -374,15 +382,20 @@ Router 11
 conf t
 hostname R11
 no ip domain lookup
-router eigrp 130
-network 192.168.3.0 255.255.255.0
-no auto-summary
 int f1/2
 no switchport
 ip add 10.9.11.1 255.255.255.252
 no shut
+int lo 0 
+ip add 11.11.11.11 255.255.255.255
 int lo 1
 ip add 192.168.3.1 255.255.255.0
 no shut
+router eigrp 65500
+network 10.9.11.0 0.0.0.3
+network 192.168.3.0 0.0.0.255
+network 11.11.11.11 0.0.0.0
+no auto-summary
+exit
 end
 !
