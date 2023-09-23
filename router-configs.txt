@@ -44,9 +44,16 @@ Router 3
 conf t 
 hostname R3
 no ip domain lookup
+router ospf 307
+network 192.168.2.0 0.0.0.255 area 0
+network 3.3.3.3 0.0.0.0 area 0
+network 10.7.3.0 0.0.0.3 area 0
 int f1/0
 no switchport
 ip add 10.7.3.1 255.255.255.252
+no shut
+int lo 0 
+ip add 3.3.3.3 255.255.255.255
 no shut
 int lo 1
 ip add 192.168.2.1 255.255.255.0
@@ -190,6 +197,10 @@ router isis 100
 is-type level-2-only
 net 00.0000.0000.0007.00
 exit
+router ospf 703 vrf cust-a
+domain-id 0.0.0.8
+network 0.0.0.0 255.255.255.255 area 0
+redistribute bgp 64100 subnet
 ip vrf cust-a
 rd 65500:100
 route-target export 65500:100
