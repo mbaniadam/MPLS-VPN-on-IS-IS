@@ -72,9 +72,19 @@ int f0/1
 no switchport
 ip add 10.9.4.1 255.255.255.252
 no shut
+int lo 0
+ip add 4.4.4.4 255.255.255.255
+no shut
+exit
 int lo 1
 ip add 192.168.3.1 255.255.255.0
 no shut
+exit
+router eigrp 64500
+network 10.9.4.0 0.0.0.3
+network 192.168.3.0 0.0.0.255
+network 4.4.4.4 0.0.0.0
+no auto-summary
 end
 
 ISP--------------------------------
@@ -348,6 +358,12 @@ address-family ipv4 vrf cust-a
 autonomous-system 65500
 no auto-summary
 network 10.9.11.0 0.0.0.3
+redistribute bgp 64100 metric 1000 100 255 1 1500
+router eigrp 904
+address-family ipv4 vrf cust-b 
+autonomous-system 64500
+no auto-summary
+network 10.9.4.0 0.0.0.3
 redistribute bgp 64100 metric 1000 100 255 1 1500 
 exit
 
