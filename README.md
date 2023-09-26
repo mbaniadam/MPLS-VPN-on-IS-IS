@@ -18,6 +18,6 @@
 
 **OSPF, EIGRP, and BGP**: These routing protocols are used for CE-PE routing, connecting the customer sites to the provider network.
 
-![image](https://github.com/mbaniadam/MPLS-VPN-on-IS-IS/assets/75830370/9ed5d5a7-3615-4137-acdc-14fa707c11ea)
+![image](https://github.com/mbaniadam/MPLS-VPN-on-IS-IS/assets/75830370/8f36efad-fa42-4513-8cee-444d4b27d301)
 
 
