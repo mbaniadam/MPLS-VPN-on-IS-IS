@@ -65,9 +65,6 @@ Router 4
 conf t 
 hostname R4
 no ip domain lookup
-router eigrp 230
-network 192.168.3.0 255.255.255.0
-no auto-summary
 int f0/1
 no switchport
 ip add 10.9.4.1 255.255.255.252
@@ -98,14 +95,14 @@ is-type level-2-only
 net 00.0000.0000.0005.00
 exit
 ip vrf cust-a
-rd 65500:100
-route-target export 65500:100
-route-target import 65500:100
+rd 64100:100
+route-target export 64100:100
+route-target import 64100:100
 exit
 ip vrf cust-b
-rd 64500:200
-route-target export 64500:200
-route-target import 64500:200
+rd 64100:200
+route-target export 64100:200
+route-target import 64100:200
 exit
 mpls label range 500 599
 mpls ip
@@ -174,6 +171,12 @@ template peer-policy PE
 send-community extended
 route-reflector-client
 exit
+neighbor 1.1.1.1 remote-as 65500
+neighbor 1.1.1.1 ebgp-multihop 2
+neighbor 1.1.1.1 update-source lo1
+neighbor 10.10.10.10 remote-as 64500
+neighbor 10.10.10.10 ebgp-multihop 2
+neighbor 10.10.10.10 update-source lo1
 neighbor 5.5.5.5 inherit peer-session PE
 neighbor 7.7.7.7 inherit peer-session PE
 neighbor 8.8.8.8 inherit peer-session PE
@@ -233,9 +236,9 @@ domain-id 0.0.0.8
 network 0.0.0.0 255.255.255.255 area 0
 redistribute bgp 64100 subnet
 ip vrf cust-a
-rd 65500:100
-route-target export 65500:100
-route-target import 65500:100
+rd 64100:100
+route-target export 64100:100
+route-target import 64100:100
 exit
 mpls label range 700 799
 mpls ip
@@ -279,9 +282,9 @@ is-type level-2-only
 net 00.0000.0000.0008.00
 exit
 ip vrf cust-b
-rd 64500:200
-route-target export 64500:200
-route-target import 64500:200
+rd 64100:200
+route-target export 64100:200
+route-target import 64100:200
 exit
 mpls label range 800 899
 mpls ip
@@ -339,14 +342,14 @@ is-type level-2-only
 net 00.0000.0000.0009.00
 exit
 ip vrf cust-a
-rd 65500:100
-route-target export 65500:100
-route-target import 65500:100
+rd 64100:100
+route-target export 64100:100
+route-target import 64100:100
 exit
 ip vrf cust-b
-rd 64500:200
-route-target export 64500:200
-route-target import 64500:200
+rd 64100:200
+route-target export 64100:200
+route-target import 64100:200
 exit
 mpls label range 900 999
 mpls ip
@@ -410,7 +413,6 @@ exit
 end
 
 
-end
 
 Customer--------------------------------
 Router 10
