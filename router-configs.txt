@@ -266,6 +266,8 @@ exit
 router bgp 64100
 neighbor 6.6.6.6 remote-as 64100
 neighbor 6.6.6.6 update-source loopback 1
+address-family ipv4 vrf cust-a
+redistribute ospf 703
 address-family vpnv4 
 neighbor 6.6.6.6 activate
 neighbor 6.6.6.6 send-community extended
