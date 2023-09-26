@@ -137,22 +137,18 @@ mpls ip
 no shut
 exit
 router bgp 64100
+neighbor 6.6.6.6 remote-as 64100
+neighbor 6.6.6.6 update-source lo1
 address-family ipv4 vrf cust-a
 neighbor 10.5.1.2 remote-as 65500 
-!neighbor 10.5.1.2 as-override
 exit-address-family
 address-family ipv4 vrf cust-b
 neighbor 10.5.10.2 remote-as 64500 
-!neighbor 10.5.10.2 as-override
 exit-address-family
-neighbor 8.8.8.8 remote-as 64100
-neighbor 8.8.8.8 update-source loopback 1
 address-family vpnv4 
-neighbor 8.8.8.8 activate
-neighbor 8.8.8.8 next-hop-self
-neighbor 8.8.8.8 send-community extended
+neighbor 6.6.6.6 activate
+neighbor 6.6.6.6 send-community extended
 exit
-
 end
 
 ISP--------------------------------
@@ -167,6 +163,31 @@ net 00.0000.0000.0006.00
 exit
 mpls label range 600 699
 mpls ip
+router bgp 64100
+no auto
+no synchro
+template peer-session PE
+remote-as 64100
+update-source lo1
+exit
+template peer-policy PE 
+send-community extended
+route-reflector-client
+exit
+neighbor 5.5.5.5 inherit peer-session PE
+neighbor 7.7.7.7 inherit peer-session PE
+neighbor 8.8.8.8 inherit peer-session PE
+neighbor 9.9.9.9 inherit peer-session PE
+address-family vpnv4
+neighbor 5.5.5.5 activate
+neighbor 5.5.5.5 inherit peer-policy PE
+neighbor 7.7.7.7 activate
+neighbor 7.7.7.7 inherit peer-policy PE
+neighbor 8.8.8.8 activate 
+neighbor 8.8.8.8 inherit peer-policy PE
+neighbor 9.9.9.9 activate 
+neighbor 9.9.9.9 inherit peer-policy PE
+exit
 int f0/0
 no switchport
 ip add 10.5.6.2 255.255.255.252
@@ -238,6 +259,14 @@ int lo 1
 ip add 7.7.7.7 255.255.255.255
 ip router isis 100
 no shut
+exit
+router bgp 64100
+neighbor 6.6.6.6 remote-as 64100
+neighbor 6.6.6.6 update-source loopback 1
+address-family vpnv4 
+neighbor 6.6.6.6 activate
+neighbor 6.6.6.6 send-community extended
+exit
 end
 
 ISP--------------------------------
@@ -289,15 +318,15 @@ ip router isis 100
 no shut
 exit
 router bgp 64100
-neighbor 5.5.5.5 remote-as 64100
-neighbor 5.5.5.5 update-source loopback 1
-address-family vpnv4 
-neighbor 5.5.5.5 activate
-neighbor 5.5.5.5 next-hop-self
-neighbor 5.5.5.5 send-community extended
-exit
+neighbor 6.6.6.6 remote-as 64100
+neighbor 6.6.6.6 update-source loopback 1
 address-family ipv4 vrf cust-b
 redistribute ospf 802 vrf cust-b
+exit
+address-family vpnv4 
+neighbor 6.6.6.6 activate
+neighbor 6.6.6.6 send-community extended
+exit
 end
 
 ISP--------------------------------
@@ -366,6 +395,19 @@ no auto-summary
 network 10.9.4.0 0.0.0.3
 redistribute bgp 64100 metric 1000 100 255 1 1500 
 exit
+router bgp 64100
+neighbor 6.6.6.6 remote-as 64100
+neighbor 6.6.6.6 update-source loopback 1
+address-family ipv4 vrf cust-b
+redistribute eigrp 904 vrf cust-b
+address-family ipv4 vrf cust-a
+redistribute eigrp 910 vrf cust-b
+exit
+address-family vpnv4 
+neighbor 6.6.6.6 activate
+neighbor 6.6.6.6 send-community extended
+exit
+end
 
 
 end
