@@ -404,9 +404,13 @@ router bgp 64100
 neighbor 6.6.6.6 remote-as 64100
 neighbor 6.6.6.6 update-source loopback 1
 address-family ipv4 vrf cust-b
-redistribute eigrp 904 vrf cust-b
+!redistribute eigrp 904 vrf cust-b ---- not working in eve-ng
+network 4.4.4.4 mask 255.255.255.255
+network 192.168.3.0 mask 255.255.255.0
 address-family ipv4 vrf cust-a
-redistribute eigrp 910 vrf cust-b
+!redistribute eigrp 910 vrf cust-a ---- not working in eve-ng
+network 192.168.3.0 mask 255.255.255.0
+network 11.11.11.11 mask 255.255.255.255
 exit
 address-family vpnv4 
 neighbor 6.6.6.6 activate
